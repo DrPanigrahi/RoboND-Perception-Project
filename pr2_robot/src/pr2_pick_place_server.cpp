@@ -308,7 +308,7 @@ bool PR2PickPlace::Routine(pr2_robot::PickPlace::Request &req,
 
       //Close Gripper
       OperateLeftGripper(true);
-      ros::Duration(3.0).sleep();
+      ros::Duration(5.0).sleep();
 
       //Reach movement
       left_move_group.setStartStateToCurrentState();
@@ -351,7 +351,7 @@ bool PR2PickPlace::Routine(pr2_robot::PickPlace::Request &req,
 
       //Open Gripper
       OperateLeftGripper(false);
-      ros::Duration(5.0).sleep();
+      ros::Duration(3.0).sleep();
 
       //Raise arms
       left_move_group.setNamedTarget("LEFT_ARM_INITIAL_POSE");
@@ -421,8 +421,8 @@ bool PR2PickPlace::OperateRightGripper(const bool &close_gripper)
   // Set finger joint values
   if (close_gripper)
   {
-    gripper_joint_positions[0] = 0.04;
-    gripper_joint_positions[1] = 0.04;
+    gripper_joint_positions[0] = 0.05;
+    gripper_joint_positions[1] = 0.05;
   }
   else
   {
@@ -453,8 +453,8 @@ bool PR2PickPlace::OperateLeftGripper(const bool &close_gripper)
   // Set finger joint values
   if (close_gripper)
   {
-    gripper_joint_positions[0] = 0.045;
-    gripper_joint_positions[1] = 0.045;
+    gripper_joint_positions[0] = 0.055;
+    gripper_joint_positions[1] = 0.055;
   }
   else
   {

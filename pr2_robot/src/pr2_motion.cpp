@@ -289,7 +289,7 @@ PR2Motion::PR2Motion(ros::NodeHandle nh)
 
     //Close Gripper
     OperateRightGripper(true);
-    ros::Duration(3.0).sleep();
+    ros::Duration(5.0).sleep();
 
     //Reach movement
     right_move_group.setStartStateToCurrentState();
