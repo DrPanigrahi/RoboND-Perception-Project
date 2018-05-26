@@ -1,30 +1,30 @@
 [//]: # (Image References)
-[image1]: ./output/PR2_Robot_Front.jpg
-[image2]: ./output/PR2_Robot_Back.jpg
-[image3]: ./output/RViz_Sensor_Stick.png
-[image4]: ./output/test3-world.png
-[image5]: ./output/feature-capture.png
-[image6]: ./output/exercise3_detection.png
-[image7]: ./output/exercise3_clustering.png
-[image8]: ./output/exercise3_clustering-2.png
-[image9]: ./output/norm_conf_mat5_100_set2.png
-[image10]: ./output/norm_conf_mat8_100_set3.png
-[image11]: ./output/pcl-table-set1.png
-[image12]: ./output/pcl-table-set2.png
-[image13]: ./output/pcl-table-set3.png
-[image14]: ./output/pcl-objects-set1.png
-[image15]: ./output/pcl-objects-set2.png
-[image16]: ./output/pcl-objects-set3.png
-[image17]: ./output/pcl-cluster-set1.png
-[image18]: ./output/pcl-cluster-set2.png
-[image19]: ./output/pcl-cluster-set3.png
-[image20]: ./output/picking-item.png
-[image21]: ./output/pick-list2-using-model3-detection.png
-[image22]: ./output/pick-list2-using-model2-detection.png
-[image23]: ./output/pick-list2-using-model2-matching.png
-[image24]: ./output/pick-list2-items-picked.png
+[image1]: ./pr2_robot/output/PR2_Robot_Front.jpg
+[image2]: ./pr2_robot/output/PR2_Robot_Back.jpg
+[image3]: ./pr2_robot/output/RViz_Sensor_Stick.png
+[image4]: ./pr2_robot/output/test3-world.png
+[image5]: ./pr2_robot/output/feature-capture.png
+[image6]: ./pr2_robot/output/exercise3_detection.png
+[image7]: ./pr2_robot/output/exercise3_clustering.png
+[image8]: ./pr2_robot/output/exercise3_clustering-2.png
+[image9]: ./pr2_robot/output/norm_conf_mat5_100_set2.png
+[image10]: ./pr2_robot/output/norm_conf_mat8_100_set3.png
+[image11]: ./pr2_robot/output/pcl-table-set1.png
+[image12]: ./pr2_robot/output/pcl-table-set2.png
+[image13]: ./pr2_robot/output/pcl-table-set3.png
+[image14]: ./pr2_robot/output/pcl-objects-set1.png
+[image15]: ./pr2_robot/output/pcl-objects-set2.png
+[image16]: ./pr2_robot/output/pcl-objects-set3.png
+[image17]: ./pr2_robot/output/pcl-cluster-set1.png
+[image18]: ./pr2_robot/output/pcl-cluster-set2.png
+[image19]: ./pr2_robot/output/pcl-cluster-set3.png
+[image20]: ./pr2_robot/output/picking-item.png
+[image21]: ./pr2_robot/output/pick-list2-using-model3-detection.png
+[image22]: ./pr2_robot/output/pick-list2-using-model2-detection.png
+[image23]: ./pr2_robot/output/pick-list2-using-model2-matching.png
+[image24]: ./pr2_robot/output/pick-list2-items-picked.png
 
-[video01]: ./output/Perception_Project_Video.mov
+[video01]: ./pr2_robot/output/Perception_Project_Video.mov
 
 
 # Project: Perception Pick & Place
