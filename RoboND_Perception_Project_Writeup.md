@@ -29,7 +29,9 @@
 
 # Project: Perception Pick & Place
 In this project we will be performing object detection and recognition using various computervision and filtering techniques. We will then bring the perception pipeline onto a gazebo environment with a PR2 Robot to pick and sort the objects into designated bins (a part of the Amazon Robotics challenge). The PR2 robot has two arms and a hip joint which allows it to rotate in place. The PR2 is also equiped with a RGBD/Stereo camera on the top to be able to see objects of interest and sort them accordingly. Our goal in this project is to work with the PointCloud data obtained from the PR2's RGBD camera and process them to perform various filtering, clustering and segmentation tasks in order to recognise the object. Once the objects has been recognised we then need to provide the PR2 robot with the positions and orientations of these objects for the Robot to pick and place the items in desired bins. 
-![alt text][image1] ![alt text][image2]
+
+![alt text][image1] 
+![alt text][image2]
 
 ---
 **The goals / steps of this project are the following:**
@@ -93,23 +95,30 @@ Note, the statistical outlier filter in python-pcl might be broken, so if you're
 ```sh
 Error: TypeError: __cinit__() takes exactly 1 positional argument (0 given)
 ```
+
 you need to re-install python-pcl:
+
 ```sh
 $ cd ~/RoboND-Perception-Exercises/python-pcl
 $ python setup.py build
 $ sudo python setup.py install
 ```
+
 **Table Segmentation**
+
 Next, perform RANSAC plane fitting to segment the table from the objects on top in the scene. 
 
 **Clustering**
+
 Use the Euclidean Clustering technique to separate the objects into distinct clusters, thus completing the segmentation process.
 
 # Object Recognition
+
 For this project, we have a variety of different objects to identify. Essentially, there are three different worlds or scenarios that we are going to work with where each scenario has different items on the table in front of the robot. These worlds are located in the /pr2_robot/worlds/ folder, namely the test_*.world files.
 
 By default, we start with the test1.world but we can modify that in the pick_place_project.launch file in the /pr2_robot/launch/ folder:
-```sh
+
+```python
   <!--Launch a gazebo world-->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <!--TODO:Change the world name to load different tabletop setup-->
@@ -142,12 +151,15 @@ if __name__ == '__main__':
         'snacks',
         'eraser']
 ```
+
 From Perception Exercise, we detected and clustered all objects accurately as shown beloow:
+
 ![alt text][image5] 
 ![alt text][image6] 
 ![alt text][image7]
 
 We choose number of training example for each object by changing the for loop as below:
+
 ```python
 for model_name in models:
         spawn_model(model_name)
@@ -160,9 +172,11 @@ for model_name in models:
                 sample_cloud = capture_sample()
                 sample_cloud_arr = ros_to_pcl(sample_cloud).to_array()
 ```
+
 Here I have choosen 100 training examples for each object. 
 
 We then run the capture_features.py as to capture the color and surface/edge features. 
+
 ```sh
 $ cd ~/catkin_ws
 $ catkin_make
@@ -170,63 +184,90 @@ $ roslaunch pr2_robot training.launch
 ```
 
 Open a new terminal and run the capture_features.py. This will take quite a long time, about 1 seconds per spawn, taking about 2-3 minutes per object. Hence it might take about 20 minutes to capture the features for the pick_list_3 items.
+
 ```sh
 $ rosrun pr2_robot capture_features.py
 ```
 
 We must train a model to recognise our objects. Since we already have objects with labels we can train a supervised machine learning classifer to train a model and then use the trained model to predict the objects in the test scenario.  In our case we will use a type of supervised model called support-vector machine (SVM). Once we have captured all the features, we then go ahead and train our SVM model with a linear cornel by running the train_svm.py. We can also train the model with different kernel such as 'rbf' and 'poly'. 
+
 ```sh
 $ rosrun pr2_robot train_svm.py
 ```
+
 We will see the accuracy of our tranined model from the normalized confusion matrix using the cross-validation set. 
 
 The SVM I used was trained by sampling 100 randomly generated poses for each item. The confusion matrix of the cross-validation set using the trained classifier model for pick-list-2 (by capturing the features for 5 objects) is shown below. The classification accuracy was between 88% for buiscuits/book to 95% for soap.
+
 ![alt text][image9] 
 
 The confusion matrix of the cross-validation set using the trained classifier model for pick-list-3 (by capturing the features for 8 objects) is shown below. The classification accuracy was between 80% for snacks to 93% for eraser.
+
 ![alt text][image10] 
 
 To test with the project, we first choose the pick list by changing the test scene number in line-3 of the pick_place_project.launch file (here we choose the objects from pick_list_2.yaml file containing 5 items).
-```sh
+
+```python
 <arg name="test_scene_num" value="2"/>
 ```
+
 then we launch the project by running:
+
 ```sh
 $ roslaunch pr2_robot pick_place_project.launch
 ```
+
 and then we run our perception_pipeline code for object recognition and pick-place operation.
+
 ```sh
 $ rosrun pr2_robot perception_pipeline.py
 ```
+
 We arrive at results similar to what we got in Exercise-3 but this time for new objects in a new environment! Keep an eye out for errors in the terminal and if Gazebo/RViz crashes or doesn't come up just give it another try, sometimes takes a few attempts!
 
 The object detection, clusering and recognition of pick_list_1 is shown below:
+
 ![alt text][image11] 
 ![alt text][image14] 
 ![alt text][image17] 
 
 The object detection, clusering and recognition of pick_list_2 is shown below:
+
 ![alt text][image12] 
 ![alt text][image15] 
 ![alt text][image18] 
 
 The object detection, clusering and recognition of pick_list_3 is shown below:
+
 ![alt text][image13] 
 ![alt text][image16] 
 ![alt text][image19] 
 
 Using the model that was trained with all 8 items, I was able to identify all 3 items correctly from pick-list-1(100% accuracy), one mis-classification in pick-list-2 (80% accuracy) and two mis-classifications in pick-list-3 (75% accuracy).
+
 ![alt text][image21] 
 
 However, training the model with items from the pick-list-2 only, lead to 100% accuracy in object recognition for pick-list-2. 
+
 ![alt text][image22] 
 
 The matched items can be seen in the terminal
+
 ![alt text][image23] 
 
+# Pick-Place Operation
+
 Once the perception task is over then the Robot perfroms the pick and place operation. We extract the item group from the .yaml pick-list files and feed them into the robot to place the objects in the right bin. Once the task is complete the output.yaml file is generated and saved in the output folder. The figure below shows the PR2 in active mode for picking and placing the items.
+
 ![alt text][image24]
 
-Overall there were a lot of computer vision stuff that I learned by doing the exercises and applying them into the project. I was however, quite unhappy with the Robot's performance. Majority of the time the Robot could not grasp the objects tightely, so the objects always dropped off the gripper and fly arround. Learned lot of techniques but in the end it was a sad robot! It would be good to investigate further on the Robot arm motion, as it goes crazy and swings around eratically while trying to pick and place the objects. I might play with that at a later time. 
 
+# Summary and Future Enhancements
 
+Overall there were a lot of computer vision stuff that I learned by doing the exercises and applying them into the project. I was however, quite unhappy with the Robot's performance. There are two problems with the Robot arms, I think needs to be fixed for future Udacity students. Otherwise it looks like a slopyly designed project template.
+
+1) Majority of the time the Robot could not grasp the objects tightely, so the objects always dropped off the gripper and fly arround. Since there is not enough time for students to work on the Robot grasping during the project completion, Udacity needs to improve this model by updating their grasping parameters for future students.  
+
+2) It would be good to investigate further on the Robot arm motion, as it goes crazy and swings around eratically while trying to pick and place the objects. I belive this happens after the robot arm hits some of the objects on the table.  However, in no situation is it acceptable for a Robot arm to go crazy swinging around. This must be fixed as well for the future students. 
+
+I might play with those robot-arm motion planning algorithm issues at a later time. 
