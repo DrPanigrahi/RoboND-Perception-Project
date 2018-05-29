@@ -1,6 +1,6 @@
 [//]: # (Image References)
-[image1]: ./pr2_robot/output/PR2_Robot_Front.jpg
-[image2]: ./pr2_robot/output/PR2_Robot_Back.jpg
+[image1]: ./pr2_robot/output/PR2_Robot_Back.jpg
+[image2]: ./pr2_robot/output/PR2_Robot_Front.jpg
 [image3]: ./pr2_robot/output/RViz_Sensor_Stick.png
 [image4]: ./pr2_robot/output/test3-world.png
 [image5]: ./pr2_robot/output/feature-capture.png
@@ -43,8 +43,6 @@ In this project we will be performing object detection and recognition using var
 6. Calculate the centroid (average in x, y and z) of the set of points belonging to that each object.
 7. Create ROS messages containing the details of each object (name, pick_pose, etc.) and write these messages out to `.yaml` files, one for each of the 3 scenarios (`test1-3.world` in `/pr2_robot/worlds/`).  [See the example `output.yaml` for details on what the output should look like.](https://github.com/udacity/RoboND-Perception-Project/blob/master/pr2_robot/config/output.yaml)  
 8. Submit a link to your GitHub repo for the project or the Python code for your perception pipeline and your output `.yaml` files (3 `.yaml` files, one for each test world).  You must have correctly identified 100% of objects from `pick_list_1.yaml` for `test1.world`, 80% of items from `pick_list_2.yaml` for `test2.world` and 75% of items from `pick_list_3.yaml` in `test3.world`.
-
-**Extra Challenges: Complete the Pick & Place:**
 9. To create a collision map, publish a point cloud to the `/pr2/3d_map/points` topic and make sure you change the `point_cloud_topic` to `/pr2/3d_map/points` in `sensors.yaml` in the `/pr2_robot/config/` directory. This topic is read by Moveit!, which uses this point cloud input to generate a collision map, allowing the robot to plan its trajectory.  Keep in mind that later when you go to pick up an object, you must first remove it from this point cloud so it is removed from the collision map!
 10. Rotate the robot to generate collision map of table sides. This can be accomplished by publishing joint angle value(in radians) to `/pr2/world_joint_controller/command`
 11. Rotate the robot back to its original state.
@@ -53,16 +51,14 @@ In this project we will be performing object detection and recognition using var
 14. Place all the objects from your pick list in their respective dropoff box and you have completed the challenge!
 15. For a bigger challenge, load up the `challenge.world` scenario and apply your perception pipeline!
 
-# Generating Features
+## Generating Features
 To get started generating features, launch the training.launch file to bring up the Gazebo environment. An empty environment should appear with only the sensor stick robot in the scene. Assuming we already have a Catkin workspace setup on your virtual machine (or locally) the first step is to copy or move the /sensor_stick directory and all of its contents to ~/catkin_ws/src.
-1. clone the git repo RoboND-Perception-Exercise 
-2. copy sensor_stick folder inside Exercise-3 to the catkin_ws folder. 
-3. delete the sensor_stick folders inside Exercise-2 and Exercise-3 folder. 
+1. clone this git repo RoboND-Perception-Project 
+2. copy sensor_stick folder to the catkin_ws folder. 
+3. delete the sensor_stick folder inside the perception Project folder. 
 ```sh
-$ cp -r ~/RoboND-Perception-Exercises/Exercise-2/sensor_stick ~/catkin_ws/src/
-$ cd ~/catkin_ws/src/RoboND-Perception-Exercises/Exercise-2
-$ rm -rf sensor_stick
-$ cd ~/catkin_ws/src/RoboND-Perception-Exercises/Exercise-3
+$ cp -r ~/RoboND-Perception-Project/sensor_stick ~/catkin_ws/src/
+$ cd ~/catkin_ws/src/RoboND-Perception-Project/
 $ rm -rf sensor_stick
 ```
 Next, use rosdep to grab all the dependencies you need to run this exercise.
@@ -81,13 +77,18 @@ source ~/catkin_ws/devel/setup.bash
 ```
 Now, we should be all setup to launch the environment! Run the following command to launch the scene in Gazebo and RViz:
 
+```sh
 $ roslaunch sensor_stick robot_spawn.launch
+```
+
 Your RViz window should look like this:
+
 ![alt text][image3] 
 
 The scene in the lower left is the view as seen from an RGB-D camera mounted on top of the blue stick robot we see in the scene, hence the name "sensor_stick" for the exercise. If you don't see the exact image above and see an error in the RViz when you launch the environment, you can change the "Style" of your PointCloud2 data by clicking on it and changing it from "Points" to "Flat Squares". Next, we will write a ROS node to publish the point cloud as seen from the camera on the sensor stick!
 
-**Filtering**
+**Filtering:**
+
 Once we have our camera data, start out by applying various filters. To remove the noise, the first filter we should apply is the statistical outlier filter.
 
 Note, the statistical outlier filter in python-pcl might be broken, so if you're getting an error when running the statistical outlier filter that looks like this:
@@ -104,15 +105,15 @@ $ python setup.py build
 $ sudo python setup.py install
 ```
 
-**Table Segmentation**
+**Table Segmentation:**
 
 Next, perform RANSAC plane fitting to segment the table from the objects on top in the scene. 
 
-**Clustering**
+**Clustering:**
 
 Use the Euclidean Clustering technique to separate the objects into distinct clusters, thus completing the segmentation process.
 
-# Object Recognition
+## Object Recognition
 
 For this project, we have a variety of different objects to identify. Essentially, there are three different worlds or scenarios that we are going to work with where each scenario has different items on the table in front of the robot. These worlds are located in the /pr2_robot/worlds/ folder, namely the test_*.world files.
 
@@ -255,14 +256,14 @@ The matched items can be seen in the terminal
 
 ![alt text][image23] 
 
-# Pick-Place Operation
+## Pick & Place Operation
 
 Once the perception task is over then the Robot perfroms the pick and place operation. We extract the item group from the .yaml pick-list files and feed them into the robot to place the objects in the right bin. Once the task is complete the output.yaml file is generated and saved in the output folder. The figure below shows the PR2 in active mode for picking and placing the items.
 
 ![alt text][image24]
 
 
-# Summary and Future Enhancements
+## Summary and Future Enhancements
 
 Overall there were a lot of computer vision stuff that I learned by doing the exercises and applying them into the project. I was however, quite unhappy with the Robot's performance. There are two problems with the Robot arms, I think needs to be fixed for future Udacity students. Otherwise it looks like a slopyly designed project template.
 
